@@ -57,8 +57,8 @@ public class WeiboPageProcessor implements PageProcessor {
 	public static void main(String[] args) {
 
 		try {
-			String cookie = WeiboAPIv3.getSinaCookie("425664759@qq.com",
-					"52156i7Q");
+			String cookie = WeiboAPIv3.getSinaCookie("微博帐号",
+					"微博密码");
 
 			Site site = Site.me().setUserAgent(UserAgent.Mozilla)
 					.addCookie("Cookie", cookie)
@@ -69,7 +69,6 @@ public class WeiboPageProcessor implements PageProcessor {
 			crawler.threads(3);
 
 			for (int i = 1; i <= 1; i++) {
-				//crawler.addSeed("http://weibo.cn/liuchao1990?vt=4&page=" + i);
 				crawler.addSeed("http://weibo.cn/zhyj?vt=4&page=" + i);
 			}
 
