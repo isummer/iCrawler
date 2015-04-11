@@ -48,7 +48,7 @@ public class TopicCrawler {
 			String cookie = WeiboAPIv3.getSinaCookie("微博帐号",
 					"微博密码");
 
-			String original = TSpider
+			String original = Crawler
 					.connect("http://d.weibo.com/102803_ctg1_3299_-_ctg1_3299?page=1")
 					.header("User-Agent", 
 							"Mozilla/4.0 (compatible; MSIE 6.0; Windows 2000)")
