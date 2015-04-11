@@ -11,9 +11,8 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.jsoup.Connection;
-import org.jsoup.Jsoup;
 
+import com.isummer.icrawler.connection.Connection;
 import com.isummer.icrawler.downloader.DefaultDownloader;
 import com.isummer.icrawler.downloader.Downloader;
 import com.isummer.icrawler.pipeline.ConsolePipeline;
@@ -55,24 +54,32 @@ public class Crawler {
 		Crawler crawler = new Crawler(processor);
 		return crawler;
 	}
-
+	
 	public static Connection connect(String url, Site site) {
-		Connection conn = Jsoup.connect(url);
-		if (site.getHeaders().size() > 0) {
-			for (String key : site.getHeaders().keySet()) {
-				conn.header(key, site.getHeaders().get(key));
+		Connection conn = new Connection();
+		conn.setTargetUrl(url);
+		if(site != null) {
+			if (site.getHeaders().size() > 0) {
+				for (String key : site.getHeaders().keySet()) {
+					conn.header(key, site.getHeaders().get(key));
+				}
+			}
+			if (site.getUserAgent() != null) {
+				conn.header("User-Agent", site.getUserAgent().getValue());
+			}
+			if (site.getCookies().size() > 0) {
+				conn.cookies(site.getCookies());
+			}
+			if (site.getTimeOut() != 0) {
+				conn.timeout(site.getTimeOut());
 			}
 		}
-		if (site.getUserAgent() != null) {
-			conn.header("User-Agent", site.getUserAgent().getValue());
-		}
-		if (site.getCookies().size() > 0) {
-			conn.cookies(site.getCookies());
-		}
-		if (site.getTimeOut() != 0) {
-			conn.timeout(site.getTimeOut());
-		}
+		
 		return conn;
+	}
+	
+	public static Connection connect(String url) {
+		return connect(url, null);
 	}
 
 	public Scheduler getScheduler() {
