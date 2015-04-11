@@ -6,12 +6,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.apache.commons.io.IOUtils;
-import org.jsoup.Connection;
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import com.isummer.icrawler.Crawler;
 import com.isummer.icrawler.Page;
 import com.isummer.icrawler.Task;
+import com.isummer.icrawler.connection.Connection;
 
 public class DefaultDownloader extends Downloader{
 
@@ -19,19 +20,21 @@ public class DefaultDownloader extends Downloader{
 	public Page download(String url, Task task) {
 		boolean isSave = false;
 		Document doc = null;
+		String response = "";
 		try {
 			Connection conn = Crawler.connect(url, task.getSite());
-			doc = conn.get();
+			response = conn.get();
 			if(isSave) {
-				String response = doc.html();
 				if(response != null) {
-					String filePath = "e:\\crawler-data\\" + getFileNameByUrl(url, conn.response().contentType());
+					String filePath = "e:\\crawler-data\\" + getFileNameByUrl(url, conn.getContentType());
 					saveToLocal(response, filePath);
 				}
 			}
+			doc = Jsoup.parse(response);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
 		return doc != null ? new Page(url,doc) : null;
 	}
 	
